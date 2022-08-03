@@ -44,6 +44,13 @@ export type BitbucketHook = {
   url: Scalars['String'];
 };
 
+export type CiBuild = {
+  __typename?: 'CiBuild';
+  ciBuildId: Scalars['String'];
+  runs: Array<Run>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
 export type Commit = {
   __typename?: 'Commit';
   authorEmail?: Maybe<Scalars['String']>;
@@ -366,6 +373,7 @@ export type ProjectInput = {
 
 export type Query = {
   __typename?: 'Query';
+  ciBuilds: Array<Maybe<CiBuild>>;
   instance?: Maybe<Instance>;
   project?: Maybe<Project>;
   projects: Array<Project>;
@@ -373,6 +381,10 @@ export type Query = {
   runFeed: RunFeed;
   runs: Array<Maybe<Run>>;
   specStats?: Maybe<SpecStats>;
+};
+
+export type QueryCiBuildsArgs = {
+  filters?: InputMaybe<Array<InputMaybe<Filters>>>;
 };
 
 export type QueryInstanceArgs = {
@@ -720,6 +732,7 @@ export type ResolversTypes = {
   BitbucketHook: ResolverTypeWrapper<BitbucketHook>;
   BitbucketHookType: ResolverTypeWrapper<Scalars['BitbucketHookType']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CiBuild: ResolverTypeWrapper<CiBuild>;
   Commit: ResolverTypeWrapper<Commit>;
   CreateBitbucketHookInput: CreateBitbucketHookInput;
   CreateGChatHookInput: CreateGChatHookInput;
@@ -791,6 +804,7 @@ export type ResolversParentTypes = {
   BitbucketHook: BitbucketHook;
   BitbucketHookType: Scalars['BitbucketHookType'];
   Boolean: Scalars['Boolean'];
+  CiBuild: CiBuild;
   Commit: Commit;
   CreateBitbucketHookInput: CreateBitbucketHookInput;
   CreateGChatHookInput: CreateGChatHookInput;
@@ -889,6 +903,20 @@ export interface BitbucketHookTypeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['BitbucketHookType'], any> {
   name: 'BitbucketHookType';
 }
+
+export type CiBuildResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['CiBuild'] = ResolversParentTypes['CiBuild']
+> = {
+  ciBuildId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  runs?: Resolver<Array<ResolversTypes['Run']>, ParentType, ContextType>;
+  updatedAt?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type CommitResolvers<
   ContextType = any,
@@ -1359,6 +1387,12 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
+  ciBuilds?: Resolver<
+    Array<Maybe<ResolversTypes['CiBuild']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryCiBuildsArgs, 'filters'>
+  >;
   instance?: Resolver<
     Maybe<ResolversTypes['Instance']>,
     ParentType,
@@ -1685,6 +1719,7 @@ export type TestErrorResolvers<
 export type Resolvers<ContextType = any> = {
   BitbucketHook?: BitbucketHookResolvers<ContextType>;
   BitbucketHookType?: GraphQLScalarType;
+  CiBuild?: CiBuildResolvers<ContextType>;
   Commit?: CommitResolvers<ContextType>;
   CypressConfig?: CypressConfigResolvers<ContextType>;
   DateTime?: GraphQLScalarType;

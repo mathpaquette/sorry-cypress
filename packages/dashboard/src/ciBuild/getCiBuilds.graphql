@@ -1,0 +1,19 @@
+query getCiBuilds {
+  ciBuilds {
+    ciBuildId
+    updatedAt
+    runs {
+      runId
+      createdAt
+      completion {
+        ...RunSummaryCompletion
+      }
+      meta {
+        ...RunSummaryMeta
+      }
+      progress {
+        ...RunProgress
+      }
+    }
+  }
+}

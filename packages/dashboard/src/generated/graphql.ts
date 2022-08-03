@@ -38,6 +38,13 @@ export type BitbucketHook = {
   url: Scalars['String'];
 };
 
+export type CiBuild = {
+  __typename?: 'CiBuild';
+  ciBuildId: Scalars['String'];
+  runs: Array<Run>;
+  updatedAt: Maybe<Scalars['DateTime']>;
+};
+
 export type Commit = {
   __typename?: 'Commit';
   authorEmail: Maybe<Scalars['String']>;
@@ -360,6 +367,7 @@ export type ProjectInput = {
 
 export type Query = {
   __typename?: 'Query';
+  ciBuilds: Array<Maybe<CiBuild>>;
   instance: Maybe<Instance>;
   project: Maybe<Project>;
   projects: Array<Project>;
@@ -367,6 +375,10 @@ export type Query = {
   runFeed: RunFeed;
   runs: Array<Maybe<Run>>;
   specStats: Maybe<SpecStats>;
+};
+
+export type QueryCiBuildsArgs = {
+  filters?: InputMaybe<Array<InputMaybe<Filters>>>;
 };
 
 export type QueryInstanceArgs = {
@@ -602,6 +614,66 @@ export type UpdateTeamsHookInput = {
   hookId: Scalars['ID'];
   projectId: Scalars['ID'];
   url: Scalars['String'];
+};
+
+export type GetCiBuildsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCiBuildsQuery = {
+  __typename?: 'Query';
+  ciBuilds: Array<{
+    __typename?: 'CiBuild';
+    ciBuildId: string;
+    updatedAt: string | null;
+    runs: Array<{
+      __typename?: 'Run';
+      runId: string;
+      createdAt: string;
+      completion: {
+        __typename?: 'RunCompletion';
+        completed: boolean;
+        inactivityTimeoutMs: number | null;
+      } | null;
+      meta: {
+        __typename?: 'RunMeta';
+        ciBuildId: string;
+        projectId: string;
+        commit: {
+          __typename?: 'Commit';
+          sha: string | null;
+          branch: string | null;
+          remoteOrigin: string | null;
+          message: string | null;
+          authorEmail: string | null;
+          authorName: string | null;
+        } | null;
+      };
+      progress: {
+        __typename?: 'RunProgress';
+        updatedAt: string | null;
+        groups: Array<{
+          __typename?: 'RunGroupProgress';
+          groupId: string;
+          instances: {
+            __typename?: 'RunGroupProgressInstances';
+            overall: number;
+            claimed: number;
+            complete: number;
+            failures: number;
+            passes: number;
+          };
+          tests: {
+            __typename?: 'RunGroupProgressTests';
+            overall: number;
+            passes: number;
+            failures: number;
+            pending: number;
+            skipped: number;
+            flaky: number;
+          };
+        }>;
+      } | null;
+    }>;
+  } | null>;
 };
 
 export type GetInstanceQueryVariables = Exact<{
@@ -1372,6 +1444,78 @@ export const RunProgressFragmentDoc = gql`
   ${RunGroupProgressInstancesFragmentDoc}
   ${RunGroupProgressTestsFragmentDoc}
 `;
+export const GetCiBuildsDocument = gql`
+  query getCiBuilds {
+    ciBuilds {
+      ciBuildId
+      updatedAt
+      runs {
+        runId
+        createdAt
+        completion {
+          ...RunSummaryCompletion
+        }
+        meta {
+          ...RunSummaryMeta
+        }
+        progress {
+          ...RunProgress
+        }
+      }
+    }
+  }
+  ${RunSummaryCompletionFragmentDoc}
+  ${RunSummaryMetaFragmentDoc}
+  ${RunProgressFragmentDoc}
+`;
+
+/**
+ * __useGetCiBuildsQuery__
+ *
+ * To run a query within a React component, call `useGetCiBuildsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCiBuildsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCiBuildsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCiBuildsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetCiBuildsQuery,
+    GetCiBuildsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCiBuildsQuery, GetCiBuildsQueryVariables>(
+    GetCiBuildsDocument,
+    options
+  );
+}
+export function useGetCiBuildsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCiBuildsQuery,
+    GetCiBuildsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCiBuildsQuery, GetCiBuildsQueryVariables>(
+    GetCiBuildsDocument,
+    options
+  );
+}
+export type GetCiBuildsQueryHookResult = ReturnType<typeof useGetCiBuildsQuery>;
+export type GetCiBuildsLazyQueryHookResult = ReturnType<
+  typeof useGetCiBuildsLazyQuery
+>;
+export type GetCiBuildsQueryResult = Apollo.QueryResult<
+  GetCiBuildsQuery,
+  GetCiBuildsQueryVariables
+>;
 export const GetInstanceDocument = gql`
   query getInstance($instanceId: ID!) {
     instance(id: $instanceId) {
