@@ -166,6 +166,12 @@ const updateNav = (data?: GetRunQuery) =>
     }
 
     setNav([
+        {
+            type: NavItemType.projects,
+            label: 'Projects',
+            link: './projects',
+        },
+
       {
         type: NavItemType.project,
         label: data.run.meta.projectId,

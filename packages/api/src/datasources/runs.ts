@@ -82,9 +82,33 @@ export class RunsAPI extends DataSource {
         .toArray()) as Run[];
       return results;
     } catch (error) {
-      getLogger().error({ error }, 'Error wihle getting all runs...');
+      getLogger().error({ error }, 'Error while getting all runs...');
       throw error;
     }
+  }
+
+  async getAllCiBuilds({ filters }: { filters: AggregationFilter[] }) {
+    const aggregationPipeline = [
+      ...filtersToAggregations(filters),
+      { $sort: { _id: -1 } },
+      // {$match: {$lt: new ObjectId('')}}, TODO: cursor
+      { $limit: 1000 }, // for performance improvement since group doesn't leverage indexes
+      {
+        $group: {
+          _id: '$meta.ciBuildId',
+          runs: { $push: '$$ROOT' },
+          runId: { $max: '$_id' },
+        },
+      },
+      { $addFields: { ciBuildId: '$_id' } },
+      { $sort: { runId: -1 } },
+      { $limit: PAGE_ITEMS_LIMIT },
+    ];
+
+    getLogger().log({ aggregationPipeline }, 'Getting all ci builds...');
+
+    const results = await Collection.run().aggregate(aggregationPipeline);
+    return results.toArray();
   }
 
   getRunById(id: string) {

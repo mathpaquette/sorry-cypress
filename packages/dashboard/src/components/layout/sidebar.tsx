@@ -42,6 +42,7 @@ import {
   navStructure,
 } from '@sorry-cypress/dashboard/lib/navigation';
 import logoDark from '@sorry-cypress/dashboard/resources/logo-dark.svg';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import packageJson from '../../../package.json';
@@ -304,8 +305,9 @@ export const ProjectDetailsMenu: ProjectDetailsMenuType = ({
 
 export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
   const nav = useReactiveVar(navStructure);
+  const projectsNavItem = nav.find((item) => item.type === NavItemType.projects);
   const projectNavItem = nav.find((item) => item.type === NavItemType.project);
-  const projectView = projectNavItem && nav?.[1];
+  const projectView = projectNavItem && nav?.[2];
   const theme = useTheme();
   const smallScreen = !useMediaQuery(theme.breakpoints.up('md'), {
     noSsr: true,
@@ -317,7 +319,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
       filters: [],
     },
   });
-  const isHome = !loading && !error && !projectNavItem;
+  const isHome = !loading && !error && isEmpty(nav);
   const { projects } = (data || {}) as {
     projects: Array<{ projectId: string; projectColor: string }>;
   };
@@ -423,7 +425,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
               sx={{ mt: 0, mb: 0 }}
               primary={
                 isHome
-                  ? 'Projects'
+                  ? 'Home'
                   : decodeURIComponent(projectNavItem?.label || '')
               }
               primaryTypographyProps={{
@@ -443,14 +445,14 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
               sx={{ my: 3, ml: 4, mr: 2 }}
             />
           ))}
-        {!loading && isHome && (
+        {!loading && projectNavItem && !projectView && (
           <ProjectListMenu
             projects={projects}
             open={open}
             onItemClick={handleMenuItemClick}
           />
         )}
-        {!loading && !isHome && projectNavItem?.label && projectView?.type && (
+        {!loading && projectNavItem?.label && projectView?.type && (
           <ProjectDetailsMenu
             projectId={decodeURIComponent(projectNavItem?.label || '')}
             projectColor={currentProject?.projectColor}
