@@ -1,5 +1,8 @@
 import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { CiBuildsDetailsView } from '@sorry-cypress/dashboard/ciBuild/ciBuildsDetailsView';
+import { CiBuildsView } from '@sorry-cypress/dashboard/ciBuild/ciBuildsView';
+import { ProjectsView } from '@sorry-cypress/dashboard/project/projectsView';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Layout } from './components';
@@ -60,6 +63,7 @@ export const Root = () => {
             <Layout>
               <Routes>
                 <Route path="/" element={<DashboardView />} />
+                <Route path="/projects" element={<ProjectsView />} />
                 <Route
                   path="/:projectId/runs/:buildId"
                   element={<RunRedirect />}
@@ -79,6 +83,12 @@ export const Root = () => {
                   path={'/instance/:id/others/:itemId'}
                   element={<InstanceDetailsView />}
                 />
+
+                <Route
+                  path={'/ci-builds/:ciBuildId'}
+                  element={<CiBuildsDetailsView />}
+                />
+                <Route path={'/ci-builds'} element={<CiBuildsView />} />
               </Routes>
             </Layout>
           </ErrorBoundary>

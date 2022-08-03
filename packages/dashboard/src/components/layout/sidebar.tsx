@@ -45,6 +45,7 @@ import logoDark from '@sorry-cypress/dashboard/resources/logo-dark.svg';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import packageJson from '../../../package.json';
+import {isEmpty} from "lodash";
 
 export const DRAWER_WIDTH = 310;
 export const DRAWER_WIDTH_SM = 73;
@@ -317,7 +318,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
       filters: [],
     },
   });
-  const isHome = !loading && !error && !projectNavItem;
+  const isHome = !loading && !error && isEmpty(nav);
   const { projects } = (data || {}) as {
     projects: Array<{ projectId: string; projectColor: string }>;
   };
@@ -423,7 +424,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
               sx={{ mt: 0, mb: 0 }}
               primary={
                 isHome
-                  ? 'Projects'
+                  ? 'Home'
                   : decodeURIComponent(projectNavItem?.label || '')
               }
               primaryTypographyProps={{

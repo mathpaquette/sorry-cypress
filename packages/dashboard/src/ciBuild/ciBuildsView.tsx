@@ -1,42 +1,27 @@
 import {
-  Bolt as BoltIcon,
   Compress as CompressIcon,
   Loop as LoopIcon,
 } from '@mui/icons-material';
 import { Toolbar } from '@sorry-cypress/dashboard/components';
+import { useAutoRefresh } from '@sorry-cypress/dashboard/hooks';
 import {
-  getProjectPath,
   NavItemType,
   setNav,
 } from '@sorry-cypress/dashboard/lib/navigation';
 import React, { FunctionComponent, useLayoutEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useAutoRefresh } from '../hooks';
-import { RunsFeed } from './runsFeed/runsFeed';
+import {CiBuildsFeed} from "@sorry-cypress/dashboard/ciBuild/ciBuildsFeed/ciBuildsFeed";
 
-export const RunsView: RunsViewComponent = () => {
-  const { projectId } = useParams();
+export const CiBuildsView: CiBuildsViewComponent = (props) => {
 
   const [search, setSearch] = useState('');
-  const [showActions, setShowActions] = useState(false);
   const [compactView, setCompactView] = useState(false);
   const [shouldAutoRefresh, setShouldAutoRefresh] = useAutoRefresh();
 
   useLayoutEffect(() => {
     setNav([
       {
-        type: NavItemType.project,
-        label: 'Projects',
-        link: './projects',
-      },
-      {
-        type: NavItemType.project,
-        label: projectId,
-        link: getProjectPath(projectId),
-      },
-      {
-        type: NavItemType.latestRuns,
-        label: 'Latest runs',
+        type: NavItemType.ciBuilds,
+        label: 'CI Builds',
       },
     ]);
   }, []);
@@ -45,16 +30,6 @@ export const RunsView: RunsViewComponent = () => {
     <>
       <Toolbar
         actions={[
-          {
-            key: 'showActions',
-            text: 'Show actions',
-            icon: BoltIcon,
-            selected: showActions,
-            toggleButton: true,
-            onClick: () => {
-              setShowActions(!showActions);
-            },
-          },
           {
             key: 'compactView',
             text: 'Compact view',
@@ -78,20 +53,18 @@ export const RunsView: RunsViewComponent = () => {
             },
           },
         ]}
-        searchPlaceholder="Enter run build id"
+        searchPlaceholder="Enter CI build id"
         onSearch={setSearch}
       />
-      <RunsFeed
-        projectId={projectId!}
-        search={search}
-        showActions={showActions}
-        compact={compactView}
+
+      <CiBuildsFeed
+          search={search}
+          compact={compactView}
       />
     </>
   );
 };
 
-type RunsViewProps = {
-  // nothing
-};
-type RunsViewComponent = FunctionComponent<RunsViewProps>;
+type CiBuildsViewProps = {};
+
+type CiBuildsViewComponent = FunctionComponent<CiBuildsViewProps>;

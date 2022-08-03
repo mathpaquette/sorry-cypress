@@ -1,7 +1,6 @@
 import { Clear, Search } from '@mui/icons-material';
 import { IconButton, InputAdornment, TextField, Theme } from '@mui/material';
-import useDebounce from '@sorry-cypress/dashboard/hooks/useDebounce';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export type OnSearch = (value: string) => unknown;
@@ -13,28 +12,33 @@ type SearchFieldProps = {
 };
 
 const SearchField = ({ placeholder, onSearch, disabled }: SearchFieldProps) => {
-  const debounce = useDebounce();
   const [searchParams, setSearchParams] = useSearchParams();
+  const value = searchParams.get('search') || '';
+
   const setValue = (value: string) => {
+    if (!value) {
+      clearValue();
+      return;
+    }
+
     setSearchParams({ search: value });
-    debounce(() => {
-      onSearch(value);
-    });
-  };
-  const clearSearch = () => {
-    setValue('');
+    onSearch(value);
   };
 
-  const value = searchParams.get('search') || '';
-  if (value) {
-    debounce(() => {
+  const clearValue = () => {
+    searchParams.delete('search');
+    setSearchParams(searchParams);
+    onSearch('');
+  };
+
+  useEffect(() => {
+    if (value) {
       onSearch(value);
-    });
-  }
+    }
+  });
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setValue(value);
+    setValue(e.target.value);
   };
 
   return (
@@ -51,7 +55,7 @@ const SearchField = ({ placeholder, onSearch, disabled }: SearchFieldProps) => {
           <InputAdornment
             position="end"
             style={value ? {} : { display: 'none' }}
-            onClick={clearSearch}
+            onClick={clearValue}
           >
             <IconButton>
               <Clear />

@@ -9,6 +9,7 @@ export enum NavItemType {
   latestRuns,
   spec,
   test,
+  ciBuilds
 }
 interface NavItem {
   label?: string | null;

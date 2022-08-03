@@ -47,6 +47,7 @@
     "pretty-quick": "^3.0.2",
     "rimraf": "^3.0.2",
     "semver": "^7.3.2",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.0.3",
     "wsrun": "^5.2.4"
   }

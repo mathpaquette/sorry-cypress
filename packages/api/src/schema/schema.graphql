@@ -10,6 +10,7 @@ type Query {
     cursor: String = null
     filters: [Filters] = null
   ): [Run]!
+  ciBuilds(filters: [Filters] = null): [CiBuild]!
   runFeed(cursor: String, filters: [Filters] = null): RunFeed!
   run(id: ID!): Run
   instance(id: ID!): Instance
@@ -85,6 +86,12 @@ type Run {
   specs: [RunSpec!]!
   completion: RunCompletion
   progress: RunProgress
+}
+
+type CiBuild {
+  ciBuildId: String!
+  updatedAt: DateTime
+  runs: [Run!]!
 }
 
 type RunCompletion {
