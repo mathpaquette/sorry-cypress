@@ -305,7 +305,6 @@ export const ProjectDetailsMenu: ProjectDetailsMenuType = ({
 
 export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
   const nav = useReactiveVar(navStructure);
-  const projectsNavItem = nav.find((item) => item.type === NavItemType.projects);
   const projectNavItem = nav.find((item) => item.type === NavItemType.project);
   const projectView = projectNavItem && nav?.[2];
   const theme = useTheme();
@@ -342,7 +341,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
           }}
         >
           <ListItemAvatar sx={{ minWidth: '42px' }}>
-            <RouterLink to="/">
+            <RouterLink to="/?redirect=false">
               <Avatar
                 alt="Sorry Cypress Dashboard Home"
                 src={logoDark}
@@ -373,7 +372,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
               textAlign: smallScreen ? 'left' : 'right',
               color: 'text.primary',
               component: RouterLink,
-              to: '/',
+              to: '/?redirect=false',
             }}
             secondary={`v${packageJson.version}`}
             secondaryTypographyProps={{
