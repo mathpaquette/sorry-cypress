@@ -32,6 +32,7 @@ import {
   ThemeProvider,
   useTheme,
 } from '@mui/material/styles';
+import { HomeListMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/homeListMenu';
 import { ProjectDetailsMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/projectDetailsMenu';
 import { ProjectListMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/projectListMenu';
 import { useGetProjectsQuery } from '@sorry-cypress/dashboard/generated/graphql';
@@ -287,6 +288,9 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
               sx={{ my: 3, ml: 4, mr: 2 }}
             />
           ))}
+        {!loading && isHome && (
+          <HomeListMenu open={open} onItemClick={handleMenuItemClick} />
+        )}
         {!loading && projectNavItem && !projectView && (
           <ProjectListMenu
             projects={projects}
