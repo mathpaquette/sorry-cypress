@@ -23,16 +23,6 @@ export const DashboardView: DashboardComponent = () => {
       </Typography>
 
       {redirect && <Navigate to="/projects" />}
-      {!redirect && (
-        <ul>
-          <li>
-            <a href={'./ci-builds'}>CI Builds</a>
-          </li>
-          <li>
-            <a href={'./projects'}>Projects</a>
-          </li>
-        </ul>
-      )}
     </>
   );
 };
