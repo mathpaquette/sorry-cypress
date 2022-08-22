@@ -1,5 +1,6 @@
 import { Loop as LoopIcon } from '@mui/icons-material';
 import { Typography } from '@mui/material';
+import { CiBuildsFeed } from '@sorry-cypress/dashboard/ciBuild/ciBuildsFeed';
 import { Toolbar } from '@sorry-cypress/dashboard/components';
 import { NavItemType, setNav } from '@sorry-cypress/dashboard/lib/navigation';
 import React, { useLayoutEffect, useState } from 'react';
@@ -45,7 +46,7 @@ export function CiBuildsView() {
       >
         CI Builds
       </Typography>
-      {/*<ProjectsList search={search} />*/}
+      <CiBuildsFeed search={search}></CiBuildsFeed>
     </>
   );
 }

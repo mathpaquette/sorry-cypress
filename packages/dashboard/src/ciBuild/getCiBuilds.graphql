@@ -1,7 +1,6 @@
-query getCiBuilds {
-  ciBuilds {
+query getCiBuilds($filters: [Filters!]!) {
+  ciBuilds(filters: $filters) {
     ciBuildId
-    updatedAt
     runs {
       runId
       createdAt

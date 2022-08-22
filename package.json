@@ -26,7 +26,7 @@
     "build": "wsrun -t build",
     "test": "yarn workspaces run test",
     "lint": "yarn workspaces run lint",
-    "dev": "wsrun dev"
+    "dev": "APOLLO_PLAYGROUND=true wsrun dev"
   },
   "husky": {
     "hooks": {

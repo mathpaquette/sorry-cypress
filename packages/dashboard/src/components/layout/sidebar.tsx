@@ -32,6 +32,7 @@ import {
   ThemeProvider,
   useTheme,
 } from '@mui/material/styles';
+import { CiBuildsListMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/ciBuildsListMenu';
 import { HomeListMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/homeListMenu';
 import { ProjectDetailsMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/projectDetailsMenu';
 import { ProjectListMenu } from '@sorry-cypress/dashboard/components/layout/sidebar/projectListMenu';
@@ -151,6 +152,7 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
   const nav = useReactiveVar(navStructure);
   const projectNavItem = nav.find((item) => item.type === NavItemType.project);
   const projectView = projectNavItem && nav?.[2];
+  const ciBuildsView = nav.find((item) => item.type === NavItemType.ciBuilds);
   const theme = useTheme();
   const smallScreen = !useMediaQuery(theme.breakpoints.up('md'), {
     noSsr: true,
@@ -306,6 +308,14 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
             selectedItem={projectView.type}
             onItemClick={handleMenuItemClick}
           />
+        )}
+        {!loading && ciBuildsView && ciBuildsView.type && (
+          <CiBuildsListMenu
+            projectColor={currentProject?.projectColor}
+            open={open}
+            selectedItem={ciBuildsView.type}
+            onItemClick={handleMenuItemClick}
+          ></CiBuildsListMenu>
         )}
         {error && (
           <Alert
