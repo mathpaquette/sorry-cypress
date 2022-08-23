@@ -22,6 +22,8 @@ export const DashboardView: DashboardComponent = () => {
         Home
       </Typography>
 
+      <p>Welcome to Sorry-Cypress!</p>
+
       {redirect && <Navigate to="/projects" />}
     </>
   );

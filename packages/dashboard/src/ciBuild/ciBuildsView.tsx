@@ -1,4 +1,7 @@
-import { Loop as LoopIcon } from '@mui/icons-material';
+import {
+  Compress as CompressIcon,
+  Loop as LoopIcon,
+} from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import { CiBuildsFeed } from '@sorry-cypress/dashboard/ciBuild/ciBuildsFeed';
 import { Toolbar } from '@sorry-cypress/dashboard/components';
@@ -8,6 +11,7 @@ import { useAutoRefresh } from '../hooks';
 
 export function CiBuildsView() {
   const [search, setSearch] = useState('');
+  const [compactView, setCompactView] = useState(false);
   const [shouldAutoRefresh, setShouldAutoRefresh] = useAutoRefresh();
 
   useLayoutEffect(() => {
@@ -23,6 +27,17 @@ export function CiBuildsView() {
     <>
       <Toolbar
         actions={[
+          {
+            key: 'compactView',
+            text: 'Compact view',
+            showInMenuBreakpoint: ['xs'],
+            icon: CompressIcon,
+            toggleButton: true,
+            selected: compactView,
+            onClick: () => {
+              setCompactView(!compactView);
+            },
+          },
           {
             key: 'autoRefresh',
             text: 'Auto Refresh',

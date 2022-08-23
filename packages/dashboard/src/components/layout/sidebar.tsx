@@ -311,7 +311,6 @@ export const Sidebar: SidebarType = ({ open, onToggleSidebar }) => {
         )}
         {!loading && ciBuildsView && ciBuildsView.type && (
           <CiBuildsListMenu
-            projectColor={currentProject?.projectColor}
             open={open}
             selectedItem={ciBuildsView.type}
             onItemClick={handleMenuItemClick}
