@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-export const CiBuildsDetailsView: CiBuildsDetailsViewComponent = (props) => {
+export const CiBuildDetailsView: CiBuildsDetailsViewComponent = (props) => {
   return (
     <>
       <p>CiBuilds Details View</p>

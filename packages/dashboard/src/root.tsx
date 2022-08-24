@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import { CiBuildsDetailsView } from '@sorry-cypress/dashboard/ciBuild/ciBuildsDetailsView';
+import { CiBuildDetailsView } from '@sorry-cypress/dashboard/ciBuild/ciBuildDetailsView';
 import { CiBuildsView } from '@sorry-cypress/dashboard/ciBuild/ciBuildsView';
 import { ProjectsView } from '@sorry-cypress/dashboard/project/projectsView';
 import React from 'react';
@@ -86,7 +86,7 @@ export const Root = () => {
 
                 <Route
                   path={'/ci-builds/:ciBuildId'}
-                  element={<CiBuildsDetailsView />}
+                  element={<CiBuildDetailsView />}
                 />
                 <Route path={'/ci-builds'} element={<CiBuildsView />} />
               </Routes>
