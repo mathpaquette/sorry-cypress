@@ -61,7 +61,7 @@ export function CiBuildsView() {
       >
         CI Builds
       </Typography>
-      <CiBuildsFeed search={search}></CiBuildsFeed>
+      <CiBuildsFeed compact={compactView} search={search}></CiBuildsFeed>
     </>
   );
 }

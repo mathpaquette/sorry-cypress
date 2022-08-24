@@ -1,4 +1,5 @@
 import { Alert, Paper, Skeleton } from '@mui/material';
+import { CiBuildSummary } from '@sorry-cypress/dashboard/ciBuild/ciBuildSummary';
 import { useGetCiBuildsQuery } from '@sorry-cypress/dashboard/generated/graphql';
 import { range } from 'lodash';
 import React, { FunctionComponent } from 'react';
@@ -69,7 +70,12 @@ export const CiBuildsFeed: CiBuildsFeedComponent = (props) => {
   return (
     <>
       {data.ciBuilds.map((ciBuild) => (
-        <p key={ciBuild?.ciBuildId}>{ciBuild?.ciBuildId}</p>
+        <CiBuildSummary
+          key={ciBuild?.ciBuildId}
+          runs={ciBuild?.runs}
+          compact={compact}
+        ></CiBuildSummary>
+        // <p key={ciBuild?.ciBuildId}>{ciBuild?.ciBuildId}</p>
       ))}
     </>
   );

@@ -1,16 +1,12 @@
 import { CardContent, Collapse, Grid, Typography } from '@mui/material';
+import { Run } from '@sorry-cypress/api/generated/graphql';
 import {
-  ArrayItemType,
   getRunClaimedSpecsCount,
   getRunDurationSeconds,
   getRunOverallSpecsCount,
   getRunTestsProgress,
 } from '@sorry-cypress/common';
 import { Card, CiUrl, getCiData } from '@sorry-cypress/dashboard/components/';
-import {
-  GetRunQuery,
-  GetRunsFeedQuery,
-} from '@sorry-cypress/dashboard/generated/graphql';
 import { parseISO } from 'date-fns';
 import React, { FunctionComponent } from 'react';
 import { Commit } from '../run/commit';
@@ -22,17 +18,13 @@ import { RunSummaryTestResults } from '../run/runSummaryTestResults';
 import { RunTimeoutChip } from '../run/runTimeoutChip';
 
 export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
-  const {
-    run,
-    linkToRun,
-    brief = false,
-    compact = false,
-  } = props;
+  const { runs, linkToRun, brief = false, compact = false } = props;
 
-  if (!run) {
+  if (!runs) {
     return null;
   }
 
+  const run = runs[0];
   const runId = run.runId;
   const runMeta = run.meta;
   const runCreatedAt = run.createdAt;
@@ -55,9 +47,7 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   });
 
   return (
-    <Card
-      linkTo={linkToRun ? `/run/${runId}` : undefined}
-    >
+    <Card linkTo={linkToRun ? `/run/${runId}` : undefined}>
       <CardContent sx={{ py: '8px !important' }}>
         <Grid
           container
@@ -134,7 +124,7 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
 type CiBuildSummaryProps = {
   brief?: boolean;
   compact?: boolean;
-  run: GetRunQuery['run'] | ArrayItemType<GetRunsFeedQuery['runFeed']['runs']>;
+  runs: Array<Run>;
   linkToRun?: boolean;
 };
 type CiBuildSummaryComponent = FunctionComponent<CiBuildSummaryProps>;

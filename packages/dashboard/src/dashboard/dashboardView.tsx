@@ -22,7 +22,7 @@ export const DashboardView: DashboardComponent = () => {
         Home
       </Typography>
 
-      <p>Welcome to Sorry-Cypress!</p>
+      <h3>Welcome to Sorry-Cypress!</h3>
 
       {redirect && <Navigate to="/projects" />}
     </>
