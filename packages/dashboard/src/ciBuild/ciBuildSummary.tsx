@@ -25,6 +25,7 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   }
 
   const run = runs[0];
+
   const runId = run.runId;
   const runMeta = run.meta;
   const runCreatedAt = run.createdAt;
@@ -32,8 +33,15 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   const completed = !!run.completion?.completed;
   const inactivityTimeoutMs = run.completion?.inactivityTimeoutMs;
 
-  const overallSpecsCount = getRunOverallSpecsCount(run.progress);
-  const claimedSpecsCount = getRunClaimedSpecsCount(run.progress);
+  const overallSpecsCount = runs.reduce(
+    (acc, run) => acc + getRunOverallSpecsCount(run.progress),
+    0
+  );
+  const claimedSpecsCount = runs.reduce(
+    (acc, run) => acc + getRunClaimedSpecsCount(run.progress),
+    0
+  );
+
   const durationSeconds = getRunDurationSeconds(
     parseISO(run.createdAt),
     run.progress?.updatedAt ? parseISO(run.progress?.updatedAt) : null,
