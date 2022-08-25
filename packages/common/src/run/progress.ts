@@ -48,27 +48,25 @@ export const getRunDurationSeconds = (
   return updatedAt ? differenceInSeconds(updatedAt, createdAt) : 0;
 };
 
+export const getRunTestsProgressReducer = (r, i) => {
+  ([
+    'overall',
+    'passes',
+    'failures',
+    'pending',
+    'skipped',
+    'flaky',
+  ] as const).forEach((key) => (r[key] += i[key] ?? 0));
+  return r;
+};
 export const getRunTestsProgress = (progress: { groups: Group[] }) =>
   progress.groups
     .map(property<ArrayItemType<Group>, Group['tests']>('tests'))
-    .reduce(
-      (r, i) => {
-        ([
-          'overall',
-          'passes',
-          'failures',
-          'pending',
-          'skipped',
-          'flaky',
-        ] as const).forEach((key) => (r[key] += i[key] ?? 0));
-        return r;
-      },
-      {
-        overall: 0,
-        passes: 0,
-        failures: 0,
-        pending: 0,
-        flaky: 0,
-        skipped: 0,
-      }
-    );
+    .reduce(getRunTestsProgressReducer, {
+      overall: 0,
+      passes: 0,
+      failures: 0,
+      pending: 0,
+      flaky: 0,
+      skipped: 0,
+    });

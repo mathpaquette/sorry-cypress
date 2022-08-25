@@ -5,6 +5,7 @@ import {
   getRunDurationSeconds,
   getRunOverallSpecsCount,
   getRunTestsProgress,
+  getRunTestsProgressReducer,
 } from '@sorry-cypress/common';
 import { Card, CiUrl, getCiData } from '@sorry-cypress/dashboard/components/';
 import { parseISO } from 'date-fns';
@@ -48,7 +49,19 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
     run.completion?.inactivityTimeoutMs ?? null
   );
 
-  const testsProgress = run.progress && getRunTestsProgress(run.progress);
+  const testsProgress = runs.reduce(
+    (acc, run) =>
+      getRunTestsProgressReducer(acc, getRunTestsProgress(run.progress)),
+    {
+      overall: 0,
+      passes: 0,
+      failures: 0,
+      pending: 0,
+      flaky: 0,
+      skipped: 0,
+    }
+  );
+
   const ciData = getCiData({
     ciBuildId: runMeta?.ciBuildId,
     projectId: runMeta?.projectId,
