@@ -1,4 +1,7 @@
-import { PAGE_ITEMS_LIMIT } from '@sorry-cypress/api/config';
+import {
+  CI_BUILD_BATCH_SIZE,
+  PAGE_ITEMS_LIMIT,
+} from '@sorry-cypress/api/config';
 import { OrderingOptions } from '@sorry-cypress/api/generated/graphql';
 import {
   AggregationFilter,
@@ -90,18 +93,18 @@ export class RunsAPI extends DataSource {
   async getAllCiBuilds({ filters }: { filters: AggregationFilter[] }) {
     const aggregationPipeline = [
       ...filtersToAggregations(filters),
-      { $sort: { _id: -1 } },
+      { $sort: { _id: -1 } }, // order by most recent runs
       // {$match: {$lt: new ObjectId('')}}, TODO: cursor
-      { $limit: 1000 }, // for performance improvement since group doesn't leverage indexes
+      { $limit: CI_BUILD_BATCH_SIZE }, // for performance improvement since group doesn't leverage indexes
       {
         $group: {
           _id: '$meta.ciBuildId',
           runs: { $push: '$$ROOT' },
-          runId: { $max: '$_id' },
+          latestRunId: { $max: '$_id' }, // most recent run in the group
         },
       },
       { $addFields: { ciBuildId: '$_id' } },
-      { $sort: { runId: -1 } },
+      { $sort: { latestRunId: -1 } }, // sort groups by the most recent run in the group
       { $limit: PAGE_ITEMS_LIMIT },
     ];
 
