@@ -12,15 +12,18 @@ type Group = {
     claimed: number;
     complete: number;
   };
-  tests: {
-    overall: number;
-    passes: number;
-    failures: number;
-    pending: number;
-    skipped: number;
-    flaky: number;
-  };
+  tests: GroupTests;
 };
+
+type GroupTests = {
+  overall: number;
+  passes: number;
+  failures: number;
+  pending: number;
+  skipped: number;
+  flaky: number;
+};
+
 export const getRunOverallSpecsCount = (progress: { groups: Group[] }) =>
   sum(progress.groups.map(property('instances.overall')));
 
@@ -48,7 +51,7 @@ export const getRunDurationSeconds = (
   return updatedAt ? differenceInSeconds(updatedAt, createdAt) : 0;
 };
 
-export const getRunTestsProgressReducer = (r, i) => {
+export const getRunTestsProgressReducer = (r: GroupTests, i: GroupTests) => {
   ([
     'overall',
     'passes',

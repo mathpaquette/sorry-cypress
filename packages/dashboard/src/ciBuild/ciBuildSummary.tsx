@@ -1,5 +1,4 @@
 import { CardContent, Collapse, Grid, Typography } from '@mui/material';
-import { Run } from '@sorry-cypress/api/generated/graphql';
 import {
   getRunClaimedSpecsCount,
   getRunDurationSeconds,
@@ -8,7 +7,12 @@ import {
   getRunTestsProgressReducer,
 } from '@sorry-cypress/common';
 import { Card, CiUrl, getCiData } from '@sorry-cypress/dashboard/components/';
+import {
+  CiBuild,
+  RunProgress,
+} from '@sorry-cypress/dashboard/generated/graphql';
 import { parseISO } from 'date-fns';
+import { isEmpty } from 'lodash';
 import React, { FunctionComponent } from 'react';
 import { Commit } from '../run/commit';
 import { RunDuration } from '../run/runDuration';
@@ -19,14 +23,13 @@ import { RunSummaryTestResults } from '../run/runSummaryTestResults';
 import { RunTimeoutChip } from '../run/runTimeoutChip';
 
 export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
-  const { runs, linkToRun, brief = false, compact = false } = props;
+  const { ciBuild, linkToRun, brief = false, compact = false } = props;
 
-  if (!runs) {
+  if (!ciBuild || isEmpty(ciBuild.runs)) {
     return null;
   }
 
-  const run = runs[0];
-
+  const run = ciBuild.runs[0];
   const runId = run.runId;
   const runMeta = run.meta;
   const runCreatedAt = run.createdAt;
@@ -34,12 +37,12 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   const completed = !!run.completion?.completed;
   const inactivityTimeoutMs = run.completion?.inactivityTimeoutMs;
 
-  const overallSpecsCount = runs.reduce(
-    (acc, run) => acc + getRunOverallSpecsCount(run.progress),
+  const overallSpecsCount = ciBuild.runs.reduce(
+    (acc, run) => acc + getRunOverallSpecsCount(run.progress as RunProgress),
     0
   );
-  const claimedSpecsCount = runs.reduce(
-    (acc, run) => acc + getRunClaimedSpecsCount(run.progress),
+  const claimedSpecsCount = ciBuild.runs.reduce(
+    (acc, run) => acc + getRunClaimedSpecsCount(run.progress as RunProgress),
     0
   );
 
@@ -49,9 +52,12 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
     run.completion?.inactivityTimeoutMs ?? null
   );
 
-  const testsProgress = runs.reduce(
+  const testsProgress = ciBuild.runs.reduce(
     (acc, run) =>
-      getRunTestsProgressReducer(acc, getRunTestsProgress(run.progress)),
+      getRunTestsProgressReducer(
+        acc,
+        getRunTestsProgress(run.progress as RunProgress)
+      ),
     {
       overall: 0,
       passes: 0,
@@ -145,7 +151,7 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
 type CiBuildSummaryProps = {
   brief?: boolean;
   compact?: boolean;
-  runs: Array<Run>;
+  ciBuild: CiBuild;
   linkToRun?: boolean;
 };
 type CiBuildSummaryComponent = FunctionComponent<CiBuildSummaryProps>;
