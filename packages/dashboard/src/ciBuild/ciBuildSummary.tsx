@@ -47,8 +47,8 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   );
 
   const durationSeconds = getRunDurationSeconds(
-    parseISO(run.createdAt),
-    run.progress?.updatedAt ? parseISO(run.progress?.updatedAt) : null,
+    parseISO(ciBuild.createdAt),
+    ciBuild.updatedAt ? parseISO(ciBuild.updatedAt) : null,
     run.completion?.inactivityTimeoutMs ?? null
   );
 

@@ -14,5 +14,7 @@ query getCiBuilds($filters: [Filters!]!) {
         ...RunProgress
       }
     }
+    createdAt
+    updatedAt
   }
 }

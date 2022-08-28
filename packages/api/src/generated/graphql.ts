@@ -47,7 +47,9 @@ export type BitbucketHook = {
 export type CiBuild = {
   __typename?: 'CiBuild';
   ciBuildId: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   runs: Array<Run>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Commit = {
@@ -908,7 +910,13 @@ export type CiBuildResolvers<
   ParentType extends ResolversParentTypes['CiBuild'] = ResolversParentTypes['CiBuild']
 > = {
   ciBuildId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   runs?: Resolver<Array<ResolversTypes['Run']>, ParentType, ContextType>;
+  updatedAt?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

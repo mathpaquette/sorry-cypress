@@ -91,6 +91,8 @@ type Run {
 type CiBuild {
   ciBuildId: String!
   runs: [Run!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
 }
 
 type RunCompletion {

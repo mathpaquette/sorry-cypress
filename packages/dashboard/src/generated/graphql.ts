@@ -41,7 +41,9 @@ export type BitbucketHook = {
 export type CiBuild = {
   __typename?: 'CiBuild';
   ciBuildId: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   runs: Array<Run>;
+  updatedAt: Maybe<Scalars['DateTime']>;
 };
 
 export type Commit = {
@@ -624,6 +626,8 @@ export type GetCiBuildsQuery = {
   ciBuilds: Array<{
     __typename?: 'CiBuild';
     ciBuildId: string;
+    createdAt: string;
+    updatedAt: string | null;
     runs: Array<{
       __typename?: 'Run';
       runId: string;
@@ -1461,6 +1465,8 @@ export const GetCiBuildsDocument = gql`
           ...RunProgress
         }
       }
+      createdAt
+      updatedAt
     }
   }
   ${RunSummaryCompletionFragmentDoc}

@@ -106,6 +106,12 @@ export class RunsAPI extends DataSource {
       { $addFields: { ciBuildId: '$_id' } },
       { $sort: { latestRunId: -1 } }, // sort groups by the most recent run in the group
       { $limit: PAGE_ITEMS_LIMIT },
+      {
+        $addFields: {
+          createdAt: { $min: '$runs.createdAt' },
+          updatedAt: { $max: '$runs.progress.updatedAt' },
+        },
+      },
     ];
 
     getLogger().log({ aggregationPipeline }, 'Getting all ci builds...');

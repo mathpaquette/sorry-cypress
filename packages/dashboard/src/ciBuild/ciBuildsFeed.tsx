@@ -4,6 +4,7 @@ import {
   CiBuild,
   useGetCiBuildsQuery,
 } from '@sorry-cypress/dashboard/generated/graphql';
+import { useAutoRefreshRate } from '@sorry-cypress/dashboard/hooks';
 import { range } from 'lodash';
 import React, { FunctionComponent } from 'react';
 
@@ -20,8 +21,10 @@ export const CiBuildsFeed: CiBuildsFeedComponent = (props) => {
       ]
     : [];
 
+  const refreshRate = useAutoRefreshRate();
   const { data, loading, error } = useGetCiBuildsQuery({
     variables: { filters: searchFilters },
+    pollInterval: refreshRate,
   });
 
   if (loading) {
