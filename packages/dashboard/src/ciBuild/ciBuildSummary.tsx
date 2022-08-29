@@ -1,4 +1,11 @@
-import { CardContent, Collapse, Grid, Typography } from '@mui/material';
+import { BookOutlined } from '@mui/icons-material';
+import {
+  CardContent,
+  Collapse,
+  Grid,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import {
   getRunClaimedSpecsCount,
   getRunDurationSeconds,
@@ -6,7 +13,12 @@ import {
   getRunTestsProgress,
   getRunTestsProgressReducer,
 } from '@sorry-cypress/common';
-import { Card, CiUrl, getCiData } from '@sorry-cypress/dashboard/components/';
+import {
+  Card,
+  Chip,
+  CiUrl,
+  getCiData,
+} from '@sorry-cypress/dashboard/components/';
 import {
   CiBuild,
   RunProgress,
@@ -143,6 +155,25 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
           </Grid>
         </Grid>
         <Collapse in={!compact}>
+          <Grid item container spacing={1}>
+            {ciBuild.runs.map((run) => (
+              <Tooltip
+                key={run.meta.projectId}
+                title={<>Project: {run.meta.projectId}</>}
+                arrow
+              >
+                <Grid item>
+                  <Chip
+                    size="small"
+                    color="grey"
+                    shade={600}
+                    label={run.meta.projectId}
+                    icon={BookOutlined}
+                  />
+                </Grid>
+              </Tooltip>
+            ))}
+          </Grid>
           <Grid container>
             {ciData && (
               <Grid item sm={12} md={6} lg={6} xl={4}>
