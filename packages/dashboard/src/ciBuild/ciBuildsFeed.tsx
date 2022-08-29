@@ -80,6 +80,7 @@ export const CiBuildsFeed: CiBuildsFeedComponent = (props) => {
           key={ciBuild?.ciBuildId}
           ciBuild={ciBuild as CiBuild}
           compact={compact}
+          linkToCiBuild={true}
         ></CiBuildSummary>
       ))}
     </>

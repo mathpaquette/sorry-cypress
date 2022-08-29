@@ -12,7 +12,7 @@ import {
   RunProgress,
 } from '@sorry-cypress/dashboard/generated/graphql';
 import { parseISO } from 'date-fns';
-import { isEmpty } from 'lodash';
+import { every, isEmpty } from 'lodash';
 import React, { FunctionComponent } from 'react';
 import { Commit } from '../run/commit';
 import { RunDuration } from '../run/runDuration';
@@ -23,18 +23,18 @@ import { RunSummaryTestResults } from '../run/runSummaryTestResults';
 import { RunTimeoutChip } from '../run/runTimeoutChip';
 
 export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
-  const { ciBuild, linkToRun, brief = false, compact = false } = props;
+  const { ciBuild, linkToCiBuild, brief = false, compact = false } = props;
 
   if (!ciBuild || isEmpty(ciBuild.runs)) {
     return null;
   }
 
   const run = ciBuild.runs[0];
-  const runId = run.runId;
+
   const runMeta = run.meta;
-  const runCreatedAt = run.createdAt;
-  const hasCompletion = !!run.completion;
-  const completed = !!run.completion?.completed;
+  const runCreatedAt = ciBuild.createdAt;
+  const hasCompletion = every(ciBuild.runs, (run) => !!run.completion);
+  const completed = every(ciBuild.runs, (run) => !!run.completion?.completed);
   const inactivityTimeoutMs = run.completion?.inactivityTimeoutMs;
 
   const overallSpecsCount = ciBuild.runs.reduce(
@@ -74,7 +74,13 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   });
 
   return (
-    <Card linkTo={linkToRun ? `/run/${runId}` : undefined}>
+    <Card
+      linkTo={
+        linkToCiBuild
+          ? `/ci-builds/${encodeURIComponent(ciBuild.ciBuildId)}`
+          : undefined
+      }
+    >
       <CardContent sx={{ py: '8px !important' }}>
         <Grid
           container
@@ -133,12 +139,12 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
           <Grid container>
             {ciData && (
               <Grid item sm={12} md={6} lg={6} xl={4}>
-                <CiUrl {...ciData} disableLink={linkToRun} />
+                <CiUrl {...ciData} disableLink={linkToCiBuild} />
               </Grid>
             )}
             <Commit
               brief={brief}
-              noLinks={linkToRun}
+              noLinks={linkToCiBuild}
               commit={runMeta?.commit}
             />
           </Grid>
@@ -152,6 +158,6 @@ type CiBuildSummaryProps = {
   brief?: boolean;
   compact?: boolean;
   ciBuild: CiBuild;
-  linkToRun?: boolean;
+  linkToCiBuild?: boolean;
 };
 type CiBuildSummaryComponent = FunctionComponent<CiBuildSummaryProps>;
