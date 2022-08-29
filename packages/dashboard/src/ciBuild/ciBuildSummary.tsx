@@ -12,7 +12,7 @@ import {
   RunProgress,
 } from '@sorry-cypress/dashboard/generated/graphql';
 import { parseISO } from 'date-fns';
-import { every, isEmpty } from 'lodash';
+import { every, isEmpty, property, sum } from 'lodash';
 import React, { FunctionComponent } from 'react';
 import { Commit } from '../run/commit';
 import { RunDuration } from '../run/runDuration';
@@ -35,7 +35,9 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   const runCreatedAt = ciBuild.createdAt;
   const hasCompletion = every(ciBuild.runs, (run) => !!run.completion);
   const completed = every(ciBuild.runs, (run) => !!run.completion?.completed);
-  const inactivityTimeoutMs = run.completion?.inactivityTimeoutMs;
+  const inactivityTimeoutMs = sum(
+    ciBuild.runs.map(property('completion.inactivityTimeoutMs'))
+  );
 
   const overallSpecsCount = ciBuild.runs.reduce(
     (acc, run) => acc + getRunOverallSpecsCount(run.progress as RunProgress),
