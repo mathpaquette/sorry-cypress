@@ -94,20 +94,19 @@ export class RunsAPI extends DataSource {
     const aggregationPipeline = [
       ...filtersToAggregations(filters),
       { $sort: { _id: -1 } }, // order by most recent runs
-      // {$match: {$lt: new ObjectId('')}}, TODO: cursor
-      { $limit: CI_BUILD_BATCH_SIZE }, // for performance improvement since group doesn't leverage indexes
+      { $limit: CI_BUILD_BATCH_SIZE }, // performance improvement since group doesn't leverage indexes
       {
         $group: {
           _id: '$meta.ciBuildId',
           runs: { $push: '$$ROOT' },
-          latestRunId: { $max: '$_id' }, // most recent run in the group
+          runId: { $min: '$_id' }, // oldest run
         },
       },
-      { $addFields: { ciBuildId: '$_id' } },
-      { $sort: { latestRunId: -1 } }, // sort groups by the most recent run in the group
+      { $sort: { runId: -1 } }, // sort groups by most recent runs
       { $limit: PAGE_ITEMS_LIMIT },
       {
         $addFields: {
+          ciBuildId: '$_id',
           createdAt: { $min: '$runs.createdAt' },
           updatedAt: { $max: '$runs.progress.updatedAt' },
         },

@@ -25,6 +25,13 @@ import { RunTimeoutChip } from '../run/runTimeoutChip';
 export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   const { ciBuild, linkToCiBuild, brief = false, compact = false } = props;
 
+  const getInactivityTimeoutMs = () => {
+    const inactivityTimeoutMs = sum(
+      ciBuild.runs.map(property('completion.inactivityTimeoutMs'))
+    );
+    return inactivityTimeoutMs === 0 ? undefined : inactivityTimeoutMs;
+  };
+
   if (!ciBuild || isEmpty(ciBuild.runs)) {
     return null;
   }
@@ -35,9 +42,7 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
   const runCreatedAt = ciBuild.createdAt;
   const hasCompletion = every(ciBuild.runs, (run) => !!run.completion);
   const completed = every(ciBuild.runs, (run) => !!run.completion?.completed);
-  const inactivityTimeoutMs = sum(
-    ciBuild.runs.map(property('completion.inactivityTimeoutMs'))
-  );
+  const inactivityTimeoutMs = getInactivityTimeoutMs();
 
   const overallSpecsCount = ciBuild.runs.reduce(
     (acc, run) => acc + getRunOverallSpecsCount(run.progress as RunProgress),
