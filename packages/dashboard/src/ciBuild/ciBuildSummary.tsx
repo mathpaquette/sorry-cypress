@@ -24,7 +24,7 @@ import {
   RunProgress,
 } from '@sorry-cypress/dashboard/generated/graphql';
 import { parseISO } from 'date-fns';
-import { every, isEmpty, property, sum } from 'lodash';
+import { every, isEmpty, property, sortBy, sum } from 'lodash';
 import React, { FunctionComponent } from 'react';
 import { Commit } from '../run/commit';
 import { RunDuration } from '../run/runDuration';
@@ -156,7 +156,7 @@ export const CiBuildSummary: CiBuildSummaryComponent = (props) => {
         </Grid>
         <Collapse in={!compact}>
           <Grid item container spacing={1}>
-            {ciBuild.runs.map((run) => (
+            {sortBy(ciBuild.runs, (x) => x.meta.projectId).map((run) => (
               <Tooltip
                 key={run.meta.projectId}
                 title={<>Project: {run.meta.projectId}</>}
